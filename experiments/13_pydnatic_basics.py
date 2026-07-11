@@ -70,7 +70,7 @@ print(type(request7.top_k))
 
 request8 = AskRequest(
     question="Hello",
-    top_k=True
+    top_k=True,
 )
 
 print(request8)
