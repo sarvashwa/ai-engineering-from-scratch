@@ -17,3 +17,12 @@ class Application:
     prompt_builder: PromptBuilder
     llm_service: LLMService
     rag_service: RAGService
+
+    def shutdown(self) -> None:
+        """
+        Release application-owned resources.
+
+        Currently, there are no resources requiring explicit cleanup.
+        """
+        print("release application")
+        pass
