@@ -26,11 +26,15 @@ This project follows a small set of engineering principles throughout its develo
 
 ## Core Architecture
 
-* Modular service-oriented architecture
-* Composition Root (Application Bootstrap)
-* API Composition using APIRouter
-* Dependency Injection
-* Clean separation of responsibilities
+- Modular service-oriented architecture
+- Composition Root (Application Bootstrap)
+- API Composition using APIRouter
+- Dependency Injection
+- Application lifecycle management using FastAPI Lifespan
+- Centralized configuration management
+- Global exception handling
+- Structured logging
+- Clean separation of responsibilities
 - Centralized route registration
 
 ## API Layer
@@ -48,15 +52,21 @@ This project follows a small set of engineering principles throughout its develo
 
 Current implementation is being developed incrementally.
 
-Planned components include:
+Implemented:
 
-* Local LLM inference using Ollama
-* LiteLLM integration
-* Sentence Transformer embeddings
-* ChromaDB vector database
-* Semantic retrieval
-* Prompt engineering
-* Retrieval-Augmented Generation (RAG)
+- Retrieval-Augmented Generation (RAG) orchestration
+- Local LLM inference using Ollama
+- Sentence Transformer embeddings
+- ChromaDB vector database
+- Semantic document retrieval
+- Prompt construction pipeline
+
+Planned:
+
+- LiteLLM integration
+- Streaming responses
+- Conversation memory
+- Hybrid retrieval
 
 ---
 
@@ -72,40 +82,43 @@ The project follows a few architectural rules to keep the codebase maintainable.
 - Shared configuration is centralized rather than duplicated.
 
 ---
-
+                   
 # Current Architecture
 
-```                    
-                    Client
-                       │
-                  HTTP Request
-                       │
-                       ▼
-                  FastAPI (main.py)
-                       │
-                include_router()
-                       │
-                       ▼
-                  API Router
-                       │
-          ┌────────────┴────────────┐
-          ▼                         ▼
-     Health Router             Ask Router
-          │                         │
-          ▼                         ▼
-     GET /health              POST /ask
-                                    │
-                                    ▼
-                               AskRequest
-                                    │
-                                    ▼
-                               RAGService
-                                    │
-                                    ▼
-                               AskResponse
-                                    │
-                                    ▼
-                               JSON Response
+```text
+                        Client
+                           │
+                     HTTP Request
+                           │
+                           ▼
+                     FastAPI (main.py)
+                           │
+                    Middleware
+                           │
+                           ▼
+                      API Router
+                           │
+            ┌──────────────┴──────────────┐
+            ▼                             ▼
+      Health Router                  Ask Router
+                                            │
+                                            ▼
+                                   Dependency Injection
+                                            │
+                                            ▼
+                                      Application
+                                            │
+                                            ▼
+                                       RAG Service
+                            ┌───────────────┴───────────────┐
+                            ▼                               ▼
+                    Retrieval Service                Prompt Builder
+                            │                               │
+                            ▼                               ▼
+                    Embedding Service                  LLM Service
+                            │                               │
+                            ▼                               ▼
+                        ChromaDB                       Ollama
 ```
 
 The current implementation focuses on building a clean API layer before introducing retrieval pipelines, vector databases, and LLM integrations.
@@ -162,6 +175,8 @@ src/
 │   └── bootstrap.py
 │
 ├── config/
+|     ├── config.py
+|     └── logging_config.py
 │
 ├── models/
 │
@@ -297,21 +312,43 @@ The project follows the principle of injecting the smallest dependency required 
 
 ---
 
+# Application Lifecycle
+
+The project uses FastAPI's Lifespan API to manage application-wide resources.
+
+Startup responsibilities include:
+
+- Creating the application object
+- Registering application services
+
+Shutdown responsibilities are centralized through the application's lifecycle, allowing future resources such as database connections, HTTP clients, and model instances to be released cleanly.
+
+Configuration (logging, routing, middleware, and exception handlers) remains separate from runtime resource management.
+
+---
+
 # Engineering Principles
 
 This project intentionally avoids hiding complexity behind high-level frameworks during the initial stages.
 
 Each major component is implemented independently to understand the engineering decisions behind modern AI systems, including:
 
-* Dependency Injection
-* Composition Root
-* Service-Oriented Architecture
-* API Design
-* Embedding Pipelines
-* Vector Databases
-* Semantic Search
-* Prompt Engineering
-* Retrieval-Augmented Generation
+*Each major component is implemented independently to understand the engineering decisions behind modern AI systems, including:
+
+- Composition Root
+- Dependency Injection
+- Service-Oriented Architecture
+- Application Lifecycle Management
+- Middleware
+- Global Exception Handling
+- Structured Logging
+- Configuration Management
+- API Design
+- Embedding Pipelines
+- Vector Databases
+- Semantic Search
+- Prompt Engineering
+- Retrieval-Augmented Generation
 
 ---
 
@@ -335,9 +372,9 @@ Each major component is implemented independently to understand the engineering 
 * ✅ OpenAPI & Swagger
 * ✅ Health endpoint
 * ✅ Dependency Injection with Depends
-* ⬜ Exception handling
-* ⬜ Configuration management
-* ⬜ Logging
+* ✅ Exception handling
+* ✅ Configuration management
+* ✅ Logging
 * ⬜ API versioning
 
 ## AI Pipeline
