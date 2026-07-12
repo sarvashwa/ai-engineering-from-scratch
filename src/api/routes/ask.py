@@ -1,5 +1,6 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, BackgroundTasks
 
+from src.api.background_log import background_log
 from src.api.dependencies import get_rag_service
 from src.services.rag_service import RAGService
 from src.api.schemas.ask_request import AskRequest
@@ -32,3 +33,13 @@ def ask(
     return AskResponse (
         answer = answer
     )
+
+@router.post("/background-test")
+def background_test(
+    background_tasks: BackgroundTasks,
+):
+    background_tasks.add_task(background_log)
+
+    return {
+        "message": "Response returned immediately."
+    }
