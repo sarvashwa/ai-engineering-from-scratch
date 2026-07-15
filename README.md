@@ -372,13 +372,17 @@ Each major component is implemented independently to understand the engineering 
 * ✅ OpenAPI & Swagger
 * ✅ Health endpoint
 * ✅ Dependency Injection with Depends
-* ✅ Exception handling
+* ✅ API versioning
 * ✅ Configuration management
 * ✅ Logging
-* ⬜ API versioning
+* ✅ Exception handling
+* ✅ Background tasks
+* ✅ Lifespan events
+
 
 ## AI Pipeline
 
+* ✅ Document ingestion
 * ⬜ Ollama integration
 * ⬜ LiteLLM
 * ⬜ Embedding service

@@ -5,6 +5,7 @@ from src.services.rag_service import RAGService
 from src.services.retrieval_service import RetrievalService
 from src.services.embedding_service import EmbeddingService
 from src.services.ingestion_service import IngestionService
+from src.services.document_ingestion_service import DocumentIngestionService
 from src.storage.vector_store import VectorStore
 
 
@@ -12,6 +13,7 @@ from src.storage.vector_store import VectorStore
 class Application:
     embedding_service: EmbeddingService
     vector_store: VectorStore
+    document_ingestion_service: DocumentIngestionService
     ingestion_service: IngestionService
     retrieval_service: RetrievalService
     prompt_builder: PromptBuilder

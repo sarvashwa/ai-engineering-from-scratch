@@ -30,7 +30,7 @@ def ask(
         top_k=request.top_k
     )
 
-    return AskResponse (
+    return AskResponse(
         answer = answer
     )
 
