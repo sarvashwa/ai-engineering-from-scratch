@@ -367,8 +367,6 @@ Each major component is implemented independently to understand the engineering 
 
 ## API
 
-## API
-
 * ✅ OpenAPI & Swagger
 * ✅ Health endpoint
 * ✅ Dependency Injection with Depends
