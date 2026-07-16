@@ -381,14 +381,14 @@ Each major component is implemented independently to understand the engineering 
 ## AI Pipeline
 
 * ✅ Document ingestion
-* ⬜ Ollama integration
-* ⬜ LiteLLM
-* ⬜ Embedding service
-* ⬜ ChromaDB
-* ⬜ Document ingestion
-* ⬜ Semantic retrieval
-* ⬜ Prompt builder
-* ⬜ RAG pipeline
+* ✅ Ollama integration
+* ✅ LiteLLM
+* ✅ Embedding service
+* ✅ ChromaDB
+* ✅ Document ingestion
+* ✅ Semantic retrieval
+* ✅ Prompt builder
+* ✅ RAG pipeline
 
 ## Advanced Features
 
