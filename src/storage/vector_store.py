@@ -61,4 +61,27 @@ class VectorStore:
             results["documents"][0] or [],
             results["metadatas"][0] or [],
         )
-    ]
+        ]
+    
+    def list_chunks(self) -> list[DocumentChunk]:
+        results = self._collection.get()
+        return [
+        DocumentChunk(
+            id=chunk_id,
+            text=document,
+            metadata=metadata,
+        )
+        for chunk_id, document, metadata in zip(
+            results["ids"] or [],
+            results["documents"] or [],
+            results["metadatas"] or [],
+        )
+        ]
+    
+    def clear_collection(self) -> None:
+        results = self._collection.get()
+
+        if results["ids"]:
+            self._collection.delete(
+                ids=results["ids"]
+            )
