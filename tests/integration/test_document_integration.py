@@ -1,32 +1,6 @@
-from src.storage.vector_store import VectorStore
-from src.services.embedding_service import EmbeddingService
-from src.services.ingestion_service import IngestionService
-from src.services.document_ingestion_service import DocumentIngestionService
-from src.config.config import load_settings
-
-def test_document_integration():
-
-    #Arrange
-    settings = load_settings()
-    settings.COLLECTION_NAME = "test_documents"
-
-    vector_store = VectorStore(settings)
-    
-    embedding_service = EmbeddingService(settings)
-
-    ingestion_service = IngestionService(
-        embedding_service = embedding_service,
-        vector_store = vector_store,
-    )
-
-    document_ingestion_service = DocumentIngestionService(
-        ingestion_service = ingestion_service
-    )
+def test_document_integration(document_ingestion_service, vector_store):
 
     #Act
-
-    vector_store.clear_collection()
-    
     document_ingestion_service.ingest_document(
         title = "FastAPI",
         content = "Paragraph 1\n\nParagraph 2",
