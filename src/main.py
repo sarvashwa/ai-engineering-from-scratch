@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from src.api.router import router
 from src.application.bootstrap import create_application
@@ -20,3 +21,9 @@ register_middleware(app)
 register_exception_handlers(app)
 
 app.include_router(router)
+
+app.mount(
+    "/frontend",
+    StaticFiles(directory="src/frontend"),
+    name="frontend"
+)
