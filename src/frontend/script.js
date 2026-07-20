@@ -54,9 +54,11 @@ button.addEventListener("click", async () => {
         if(done)
             break;
 
-        aiMessage.textContent += decoder.decode(value,{stream:true});
+        aiMessage.textContent += decoder.decode(value, { stream: true } );
 
         chat.scrollTop = chat.scrollHeight;
     }
 
+    // Flush any remaining buffered bytes.
+    // aiMessage.textContent += decoder.decode();
 });
