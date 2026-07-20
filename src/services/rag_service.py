@@ -22,3 +22,14 @@ class RAGService:
         prompt = self._prompt_builder.build_prompt(question, chunks)
         response = self._llm_service.generate_response(prompt)
         return response
+
+    def stream_answer(
+            self,
+            question: str,
+            top_k: int = 5
+    ):
+        chunks = self._retrieval_service.retrieve(question, top_k)
+        prompt = self._prompt_builder.build_prompt(question, chunks)
+        response = self._llm_service.generate_stream_response(prompt)
+        for token in response:
+            yield token
