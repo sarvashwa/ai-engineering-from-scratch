@@ -392,7 +392,7 @@ Each major component is implemented independently to understand the engineering 
 
 ## Advanced Features
 
-* ⬜ Streaming responses
+* ✅ Streaming responses
 * ⬜ Conversation memory
 * ⬜ Evaluation framework
 * ⬜ Hybrid search
