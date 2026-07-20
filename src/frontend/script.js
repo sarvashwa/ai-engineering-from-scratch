@@ -60,5 +60,5 @@ button.addEventListener("click", async () => {
     }
 
     // Flush any remaining buffered bytes.
-    // aiMessage.textContent += decoder.decode();
+    aiMessage.textContent += decoder.decode();
 });
