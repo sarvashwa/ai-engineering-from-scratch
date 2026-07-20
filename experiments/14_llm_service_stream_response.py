@@ -19,7 +19,7 @@ How does MongoDB store patient data?
 Answer:
 """
 
-response = llm_service.generate_stream_response(prompt)
+response = llm_service.generate_response_stream(prompt)
 
 print("=" * 80)
 print("LLM RESPONSE")

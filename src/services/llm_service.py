@@ -27,7 +27,7 @@ class LLMService:
                 f"Failed to generate response: {error}"
             ) from error
         
-    def generate_stream_response(self, prompt: str):
+    def generate_response_stream(self, prompt: str):
         request = {
             "model": self._model,
             "messages": [
@@ -42,7 +42,7 @@ class LLMService:
             response = completion(**request, base_url=self._base_url)
             for chunk in response:
                 token = chunk.choices[0].delta.content
-                if token:
+                if token is not None:
                     yield token
         except Exception as error:
             print(f"Error generating response: {error}")

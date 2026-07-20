@@ -30,6 +30,6 @@ class RAGService:
     ):
         chunks = self._retrieval_service.retrieve(question, top_k)
         prompt = self._prompt_builder.build_prompt(question, chunks)
-        response = self._llm_service.generate_stream_response(prompt)
+        response = self._llm_service.generate_response_stream(prompt)
         for token in response:
             yield token
