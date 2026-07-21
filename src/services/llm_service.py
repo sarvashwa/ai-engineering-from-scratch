@@ -1,7 +1,12 @@
+import time
+import logging
+
 from litellm import completion
+
 from src.config.config import Settings
 from src.utils.timer import Timer
 
+logger = logging.getLogger(__name__)
 class LLMService:
     def __init__(self, settings: Settings):
         self._model = settings.LLM_MODEL
@@ -42,11 +47,26 @@ class LLMService:
             }
 
             try:
-                response = completion(**request, base_url=self._base_url)
-                for chunk in response:
-                    token = chunk.choices[0].delta.content
-                    if token is not None:
-                        yield token
+                with Timer("LLM Total"):
+
+                    ttft_start = time.perf_counter()
+                    response = completion(**request, base_url=self._base_url)
+
+                    is_first_token = True
+                    for chunk in response:
+                        
+                        if is_first_token:
+                            ttft = (time.perf_counter() - ttft_start) * 1000
+                            logger.info(f"TTFT took {ttft:.2f} ms")
+                            first_token_generated_at = time.perf_counter()
+                            is_first_token = False
+
+                        token = chunk.choices[0].delta.content
+                        if token is not None:
+                            yield token
+                    generation = (time.perf_counter() - first_token_generated_at) * 1000
+                    logger.info(f"Generation took {generation:.2f} ms")
+                    
             except Exception as error:
                 print(f"Error generating response: {error}")
                 raise RuntimeError(
