@@ -7,7 +7,7 @@ class DocumentRequest(BaseModel):
 
     title: str = Field(
     description="Human-readable title for the document."
-)
+    )
 
     content: str = Field(
         description="Document content to be ingested."
