@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from src.api.router import router
-from src.application.bootstrap import create_application
 from src.api.middleware import register_middleware
 from src.config.logging_config import configure_logging
 from src.api.exception_handlers import register_exception_handlers
