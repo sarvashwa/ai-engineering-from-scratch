@@ -1,4 +1,5 @@
 from src.models.document_chunk import DocumentChunk
+from src.utils.timer import Timer
 
 class PromptBuilder:
     _PROMPT_TEMPLATE = """You are a helpful AI assistant.
@@ -30,7 +31,9 @@ class PromptBuilder:
             chunk.text
             for chunk in chunks
         )
-        return self._PROMPT_TEMPLATE.format(
-            context=context,
-            question=question
-        )
+        
+        with Timer("Prompt Construction"):
+            return self._PROMPT_TEMPLATE.format(
+                context=context,
+                question=question
+            )

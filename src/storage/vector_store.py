@@ -2,7 +2,7 @@ import chromadb
 
 from src.config.config import Settings
 from src.models.document_chunk import DocumentChunk
-
+from src.utils.timer import Timer
 class VectorStore:
     def __init__(self, settings: Settings):
         self._client = chromadb.PersistentClient(
@@ -14,7 +14,6 @@ class VectorStore:
         )
 
     def add_chunks(self, chunks: list[DocumentChunk]):
-        
         if not chunks:
             return
 
@@ -44,24 +43,25 @@ class VectorStore:
             query_embedding: list[float],
             top_k: int = 5
         ) -> list[DocumentChunk]:
-    
-        results = self._collection.query(
-            query_embeddings=[query_embedding],
-            n_results=top_k
-        )
-    
-        return [
-        DocumentChunk(
-            id=chunk_id,
-            text=document,
-            metadata=metadata,
-        )
-        for chunk_id, document, metadata in zip(
-            results["ids"][0] or [],
-            results["documents"][0] or [],
-            results["metadatas"][0] or [],
-        )
-        ]
+        
+        with Timer("Vector Search"):
+            results = self._collection.query(
+                query_embeddings=[query_embedding],
+                n_results=top_k
+            )
+        
+            return [
+            DocumentChunk(
+                id=chunk_id,
+                text=document,
+                metadata=metadata,
+            )
+            for chunk_id, document, metadata in zip(
+                results["ids"][0] or [],
+                results["documents"][0] or [],
+                results["metadatas"][0] or [],
+            )
+            ]
     
     def list_chunks(self) -> list[DocumentChunk]:
         results = self._collection.get()
