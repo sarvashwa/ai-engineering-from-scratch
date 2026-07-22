@@ -57,9 +57,8 @@ class LLMService:
                     for chunk in response:
                         
                         if is_first_token:
-                            request_id = get_request_id() or "-"
                             ttft = (time.perf_counter() - ttft_start) * 1000
-                            logger.info(f"[{request_id}] TTFT took {ttft:.2f} ms")
+                            logger.info(f"TTFT took {ttft:.2f} ms")
                             first_token_generated_at = time.perf_counter()
                             is_first_token = False
 
@@ -67,7 +66,7 @@ class LLMService:
                         if token is not None:
                             yield token
                     generation = (time.perf_counter() - first_token_generated_at) * 1000
-                    logger.info(f"[{request_id}] Generation took {generation:.2f} ms")
+                    logger.info(f"Generation took {generation:.2f} ms")
                     
             except Exception as error:
                 print(f"Error generating response: {error}")
