@@ -14,6 +14,6 @@ def configure_logging():
     logging.basicConfig(
         level=logging.INFO,
         handlers=[handler]
+    )
         # format is now updated to be used from JSONFormatter
         # format="%(asctime)s %(levelname)s [%(request_id)s] %(name)s - %(message)s",
-    )
