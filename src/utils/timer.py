@@ -1,8 +1,6 @@
 import logging
 import time
 
-from src.context.request_context import get_request_id
-
 logger = logging.getLogger(__name__)
 
 class Timer:
