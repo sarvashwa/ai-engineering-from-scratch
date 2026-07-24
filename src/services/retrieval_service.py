@@ -1,7 +1,10 @@
+from opentelemetry import trace
+
 from src.services.embedding_service import EmbeddingService
 from src.storage.vector_store import VectorStore
 from src.models.document_chunk import DocumentChunk
 
+tracer = trace.get_tracer(__name__)
 class RetrievalService:
     def __init__(
             self,
@@ -16,8 +19,9 @@ class RetrievalService:
             query: str,
             top_k: int = 5
     ) -> list[DocumentChunk]:
-        query_embedding = self._embedding_service.embed_text(query)
-        return self._vector_store.search_chunks(
-            query_embedding=query_embedding,
-            top_k=top_k
-        )
+        with tracer.start_as_current_span("Retrieval Service"):
+            query_embedding = self._embedding_service.embed_text(query)
+            return self._vector_store.search_chunks(
+                query_embedding=query_embedding,
+                top_k=top_k
+            )

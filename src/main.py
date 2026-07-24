@@ -6,8 +6,11 @@ from src.api.middleware import register_middleware
 from src.config.logging_config import configure_logging
 from src.api.exception_handlers import register_exception_handlers
 from src.api.lifespan import lifespan
+from src.tracing.tracer import configure_tracing
 
 configure_logging()
+
+configure_tracing()
 
 app = FastAPI(
     title="AI Engineering From Scratch",

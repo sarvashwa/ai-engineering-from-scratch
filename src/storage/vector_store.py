@@ -1,8 +1,12 @@
 import chromadb
 
+from opentelemetry import trace
+
 from src.config.config import Settings
 from src.models.document_chunk import DocumentChunk
 from src.utils.timer import Timer
+
+tracer = trace.get_tracer(__name__)
 class VectorStore:
     def __init__(self, settings: Settings):
         self._client = chromadb.PersistentClient(
@@ -44,7 +48,7 @@ class VectorStore:
             top_k: int = 5
         ) -> list[DocumentChunk]:
         
-        with Timer("Vector Search"):
+        with tracer.start_as_current_span("Vector Search"):
             results = self._collection.query(
                 query_embeddings=[query_embedding],
                 n_results=top_k

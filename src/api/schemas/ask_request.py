@@ -8,7 +8,7 @@ class AskRequest(BaseModel):
         min_length=5,
         max_length=500,
         description="The question to ask the RAG system.",
-        examples=["What is Retrieval-Augmented Generation?"],
+        examples=["How does MongoDB store patient data"],
     )
 
     top_k: int = Field(

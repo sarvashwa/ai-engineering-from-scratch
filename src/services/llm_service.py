@@ -3,11 +3,14 @@ import logging
 
 from litellm import completion
 
+from opentelemetry import trace
 from src.config.config import Settings
 from src.utils.timer import Timer
 from src.context.request_context import get_request_id
 
 logger = logging.getLogger(__name__)
+tracer = trace.get_tracer(__name__)
+
 class LLMService:
     def __init__(self, settings: Settings):
         self._model = settings.LLM_MODEL
@@ -16,27 +19,30 @@ class LLMService:
         self._max_tokens = settings.LLM_MAX_TOKENS
 
     def generate_response(self, prompt: str) -> str:
-        request = {
-            "model": self._model,
-            "messages": [
-                {"role": "user", "content": prompt}
-            ],
-            "temperature": self._temperature,
-            "max_tokens": self._max_tokens,
-        }
+        with tracer.start_as_current_span("LLM Service"):
 
-        try:
-            response = completion(**request, base_url=self._base_url)
-            return response.choices[0].message.content
-        except Exception as error:
-            print(f"Error generating response: {error}")
-            raise RuntimeError(
-                f"Failed to generate response: {error}"
-            ) from error
+            request = {
+                "model": self._model,
+                "messages": [
+                    {"role": "user", "content": prompt}
+                ],
+                "temperature": self._temperature,
+                "max_tokens": self._max_tokens,
+            }
+
+            try:
+                response = completion(**request, base_url=self._base_url)
+                return response.choices[0].message.content
+            except Exception as error:
+                print(f"Error generating response: {error}")
+                raise RuntimeError(
+                    f"Failed to generate response: {error}"
+                ) from error
         
     def generate_response_stream(self, prompt: str):
+        
+        with tracer.start_as_current_span("LLM Service"):
 
-        with Timer("Total Request"):
             request = {
                 "model": self._model,
                 "messages": [

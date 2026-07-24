@@ -1,7 +1,10 @@
+from opentelemetry import trace
+
 from src.services.retrieval_service import RetrievalService
 from src.services.prompt_builder import PromptBuilder
 from src.services.llm_service import LLMService
 
+tracer = trace.get_tracer(__name__)
 class RAGService:
     def __init__(
             self,
@@ -18,18 +21,20 @@ class RAGService:
             question: str,
             top_k: int = 5
     ) -> str:
-        chunks = self._retrieval_service.retrieve(question, top_k)
-        prompt = self._prompt_builder.build_prompt(question, chunks)
-        response = self._llm_service.generate_response(prompt)
-        return response
+        with tracer.start_as_current_span("RAG Service"):
+            chunks = self._retrieval_service.retrieve(question, top_k)
+            prompt = self._prompt_builder.build_prompt(question, chunks)
+            response = self._llm_service.generate_response(prompt)
+            return response
 
     def stream_answer(
             self,
             question: str,
             top_k: int = 5
     ):
-        chunks = self._retrieval_service.retrieve(question, top_k)
-        prompt = self._prompt_builder.build_prompt(question, chunks)
-        response = self._llm_service.generate_response_stream(prompt)
-        for token in response:
-            yield token
+        with tracer.start_as_current_span("RAG Service"):
+            chunks = self._retrieval_service.retrieve(question, top_k)
+            prompt = self._prompt_builder.build_prompt(question, chunks)
+            response = self._llm_service.generate_response_stream(prompt)
+            for token in response:
+                yield token

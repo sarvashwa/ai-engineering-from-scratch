@@ -1,7 +1,7 @@
 import logging
 
 from src.logging.request_context_filter import RequestContextFilter
-from logging.json_formatter import JsonFormatter
+from src.logging.json_formatter import JsonFormatter
 
 def configure_logging():
     handler = logging.StreamHandler()
