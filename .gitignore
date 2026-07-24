@@ -17,6 +17,7 @@ __pycache__/
 
 # ChromaDB
 chroma_data/
+chroma_db/
 
 # VS Code
 .vscode/
