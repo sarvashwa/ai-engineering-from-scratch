@@ -19,8 +19,11 @@ class RetrievalService:
             query: str,
             top_k: int = 5
     ) -> list[DocumentChunk]:
-        with tracer.start_as_current_span("Retrieval Service"):
+        with tracer.start_as_current_span("Retrieval Service") as span:
+            span.set_attribute("retrieval.top_k", top_k)
+
             query_embedding = self._embedding_service.embed_text(query)
+            
             return self._vector_store.search_chunks(
                 query_embedding=query_embedding,
                 top_k=top_k

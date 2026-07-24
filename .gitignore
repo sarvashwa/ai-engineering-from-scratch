@@ -1,12 +1,22 @@
 # Virtual Environment
 .venv/
+venv/
 
 # Python cache
 __pycache__/
 *.py[cod]
+.pytest_cache/
+.coverage
+.coverage.*
 
 # Environment variables
 .env
+
+# Logs
+*.log
+
+# ChromaDB
+chroma_data/
 
 # VS Code
 .vscode/
@@ -16,9 +26,3 @@ __pycache__/
 
 # macOS
 .DS_Store
-
-# Logs
-*.log
-
-# ChromaDB
-chroma_data/

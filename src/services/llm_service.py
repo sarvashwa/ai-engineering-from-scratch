@@ -19,7 +19,10 @@ class LLMService:
         self._max_tokens = settings.LLM_MAX_TOKENS
 
     def generate_response(self, prompt: str) -> str:
-        with tracer.start_as_current_span("LLM Service"):
+        with tracer.start_as_current_span("LLM Service") as span:
+            span.set_attribute("llm.model", self._model)
+            span.set_attribute("llm.temperature", self._temperature)
+            span.set_attribute("llm.max_tokens", self._max_tokens)
 
             request = {
                 "model": self._model,
