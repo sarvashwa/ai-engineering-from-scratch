@@ -8,6 +8,7 @@ from src.services.prompt_builder import PromptBuilder
 from src.services.llm_service import LLMService
 from src.services.rag_service import RAGService
 from src.config.config import Settings
+from src.observability.metrics.metrics import create_metrics
 
 from src.storage.vector_store import VectorStore
 
@@ -37,10 +38,13 @@ def create_application(
 
     llm_service = LLMService(settings)
 
+    metrics = create_metrics()
+
     rag_service = RAGService(
         retrieval_service = retrieval_service,
         prompt_builder = prompt_builder,
         llm_service = llm_service,
+        metrics = metrics
     )
 
     return Application(

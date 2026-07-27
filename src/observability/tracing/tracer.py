@@ -13,4 +13,3 @@ def configure_tracing():
     processor = BatchSpanProcessor(exporter)
 
     provider.add_span_processor(processor)
-    
