@@ -8,8 +8,10 @@ from opentelemetry.sdk.metrics.export import (
 
 class Metrics:
 
-    def __init__(self, request_counter):
+    def __init__(self, request_counter, success_counter, failed_counter):
         self.request_counter = request_counter
+        self.success_counter = success_counter
+        self.failed_counter = failed_counter
 
 def create_metrics() -> Metrics:
 
@@ -40,6 +42,20 @@ def create_metrics() -> Metrics:
         unit = "1",
     )
 
+    success_counter = meter.create_counter(
+        name="rag.requests.success",
+        description="Total successful RAG requests",
+        unit="1",
+    )
+
+    failed_counter = meter.create_counter(
+        name="rag.requests.failed",
+        description="Total failed RAG requests",
+        unit="1",
+    )
+
     return Metrics(
-        request_counter = request_counter
+        request_counter = request_counter,
+        success_counter = success_counter,
+        failed_counter = failed_counter,
     )

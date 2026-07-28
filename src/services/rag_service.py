@@ -27,10 +27,16 @@ class RAGService:
     ) -> str:
         self._metrics.request_counter.add(1)
         with tracer.start_as_current_span("RAG Service"):
-            chunks = self._retrieval_service.retrieve(question, top_k)
-            prompt = self._prompt_builder.build_prompt(question, chunks)
-            response = self._llm_service.generate_response(prompt)
-            return response
+            try:
+                chunks = self._retrieval_service.retrieve(question, top_k)
+                prompt = self._prompt_builder.build_prompt(question, chunks)
+                response = self._llm_service.generate_response(prompt)
+                self._metrics.success_counter.add(1)
+                return response
+            except Exception:
+                self._metrics.failed_counter.add(1)
+                raise
+
 
     def stream_answer(
             self,
