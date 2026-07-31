@@ -1,4 +1,9 @@
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import os
+
 
 class Settings:
     EMBEDDING_MODEL: str = os.getenv(
@@ -38,6 +43,11 @@ class Settings:
     COLLECTION_NAME: str = os.getenv(
         "COLLECTION_NAME",
         "experiment_12"
+    )
+
+    DATABASE_URL = os.getenv(
+        "DATABASE_URL",
+        "postgresql://postgres:postgres@localhost:5432/rag_db"
     )
 
 def load_settings() -> Settings:

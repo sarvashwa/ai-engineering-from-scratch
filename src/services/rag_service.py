@@ -1,4 +1,5 @@
 from opentelemetry import trace
+import time
 
 from src.services.retrieval_service import RetrievalService
 from src.services.prompt_builder import PromptBuilder
@@ -27,6 +28,7 @@ class RAGService:
     ) -> str:
         self._metrics.request_counter.add(1)
         with tracer.start_as_current_span("RAG Service"):
+            start = time.perf_counter()
             try:
                 chunks = self._retrieval_service.retrieve(question, top_k)
                 prompt = self._prompt_builder.build_prompt(question, chunks)
@@ -36,6 +38,11 @@ class RAGService:
             except Exception:
                 self._metrics.failed_counter.add(1)
                 raise
+            finally:
+                self._metrics.request_duration.record(
+                    time.perf_counter() - start
+                )
+
 
 
     def stream_answer(
