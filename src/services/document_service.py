@@ -27,3 +27,7 @@ class DocumentService:
             raise DocumentNotFoundException(document_id)
         self._document_repository.delete(document)
         self._session.commit()
+    
+    def get_document(self, document_id: int) -> Document:
+        document = self._document_repository.get_by_id(document_id)
+        return document
