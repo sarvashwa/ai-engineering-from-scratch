@@ -1,4 +1,3 @@
-
 from pydantic import BaseModel, ConfigDict, Field
 
 class CreateDocumentRequest(BaseModel):
@@ -6,6 +5,6 @@ class CreateDocumentRequest(BaseModel):
         extra = "forbid"
     )
 
-    title: str = Field(
-        description="Human-readable title for the document."
-        )
+    id: int = Field(
+        description="The ID of the document to update."
+    )

@@ -30,4 +30,18 @@ class DocumentService:
     
     def get_document(self, document_id: int) -> Document:
         document = self._document_repository.get_by_id(document_id)
+
+        if document is None:
+            raise DocumentNotFoundException(document_id)
+    
+        return document
+    
+    def update_document(self, document_id: int, title: str) -> Document:
+        document = self._document_repository.get_by_id(document_id)
+
+        if document is None:
+            raise DocumentNotFoundException(document_id)
+        
+        document.title = title
+        self._session.commit()
         return document

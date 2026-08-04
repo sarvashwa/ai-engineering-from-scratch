@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import status, APIRouter, Depends
 
 from src.api.dependencies import get_document_service
 from src.api.schemas.create_document_request import CreateDocumentRequest
+from src.api.schemas.update_document_request import UpdateDocumentRequest
 from src.api.schemas.document_response import DocumentResponse
 from src.services.document_service import DocumentService
-from src.exceptions.exceptions import DocumentNotFoundException
 
 router = APIRouter(
     prefix="/documents",
@@ -31,8 +31,8 @@ def create_document(
 @router.get(
     "/{document_id}",
     response_model=DocumentResponse,
-    summary="Find Document",
-    description="Find a document by its ID."
+    summary="Get Document",
+    description="Retrieve a document by its ID."
 )
 def get_document(
     document_id: int,
@@ -40,10 +40,38 @@ def get_document(
 ):
     document = service.get_document(document_id)
 
-    if document is None:
-        raise DocumentNotFoundException(document_id)
-
     return DocumentResponse(
         id=document.id,
         title=document.title,
 )
+
+@router.put(
+    "/{document_id}",
+    response_model=DocumentResponse,
+    summary="Update Document",
+    description="Update a document by its ID."
+)
+def update_document(
+    document_id: int,
+    request: UpdateDocumentRequest,
+    service: DocumentService = Depends(get_document_service),
+):
+    document = service.update_document(document_id, request.title)
+
+    return DocumentResponse(
+        id=document.id,
+        title=document.title,
+    )
+
+@router.delete(
+    "/{document_id}",
+    summary="Delete Document",
+    description="Delete a document by its ID.",
+    status_code=status.HTTP_204_NO_CONTENT
+)
+def delete_document(
+    document_id: int,
+    service: DocumentService = Depends(get_document_service),
+):
+    service.delete_document(document_id)
+    return {"message": f"Document with ID {document_id} has been deleted."}

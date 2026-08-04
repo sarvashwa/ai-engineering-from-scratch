@@ -24,4 +24,17 @@ def register_exception_handlers(app: FastAPI):
             content={
                 "detail": "Internal Server Error"
             }
-) 
+        )
+
+    @app.exception_handler(DocumentNotFoundException)
+    def handle_document_not_found(
+        request: Request,
+        exception: DocumentNotFoundException,
+    ):
+        logger.warning(str(exception))
+        return JSONResponse(
+            status_code=404,
+            content={
+                "detail": str(exception)
+            }
+        )
