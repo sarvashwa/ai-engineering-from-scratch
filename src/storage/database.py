@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 
 from src.config.config import load_settings
 from src.storage.models.base import Base
-from src.storage.models.document import Documents
+from src.storage.models.document import Document
 
 settings = load_settings()
 
