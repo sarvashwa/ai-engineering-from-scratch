@@ -1,11 +1,12 @@
-
 from pydantic import BaseModel, ConfigDict, Field
 
 class DocumentResponse(BaseModel):
     model_config = ConfigDict(
         extra = "forbid"
     )
-    
-    message: str = Field(
-        description="A message indicating the result of the document ingestion operation."
+    id: int = Field(
+        description="The ID of the created document."
     )
+    title: str = Field(
+        description="The title of the created document."
+    )   

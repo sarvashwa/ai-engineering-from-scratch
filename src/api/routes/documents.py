@@ -1,32 +1,34 @@
 from fastapi import APIRouter, Depends
 
-from src.services.document_ingestion_service import DocumentIngestionService
-from src.api.schemas.document_request import DocumentRequest
+from api.schemas.document_response import DocumentResponse
+from src.services.document_service import DocumentService
+from src.api.schemas.create_document_request import CreateDocumentRequest
 from src.api.schemas.document_response import DocumentResponse
-from src.api.dependencies import get_document_ingestion_service
+from src.api.dependencies import get_document_service
+
 
 router = APIRouter(
     prefix = "/documents",
     tags = ["Documents"]
 )
 
-@router.post(
-    "",
+@router.get(
+    "/{document_id}",
     response_model = DocumentResponse,
-    summary = "Add Document",
+    summary = "Get Document",
     description = (
-    "Ingest a document into the knowledge base for semantic retrieval."
+    "Retrieve a document by its ID."
     )
 )
-def create_document(
-    request: DocumentRequest,
-    document_ingestion_service: DocumentIngestionService = Depends(get_document_ingestion_service)
+def get_document(
+    request: CreateDocumentRequest,
+    service: DocumentService = Depends(get_document_service)
 ):
-    document_ingestion_service.ingest_document(
-        title = request.title,
-        content = request.content
-    )
-
+    document = service.create_document(document_id=request.document_id)
+    if document is None:
+        return {"message": "Document not found."}
+    
     return DocumentResponse(
-        message = "Document ingested successfully."
+        id = document.id,
+        title = document.title
     )
