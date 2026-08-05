@@ -4,7 +4,6 @@ load_dotenv()
 
 import os
 
-
 class Settings:
     EMBEDDING_MODEL: str = os.getenv(
         "EMBEDDING_MODEL",
