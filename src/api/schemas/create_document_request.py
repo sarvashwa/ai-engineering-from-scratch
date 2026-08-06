@@ -5,6 +5,6 @@ class CreateDocumentRequest(BaseModel):
         extra = "forbid"
     )
 
-    id: int = Field(
-        description="The ID of the document to update."
+    title: str = Field(
+        description="The title of the document to create."
     )
