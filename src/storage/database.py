@@ -14,7 +14,3 @@ SessionLocal = sessionmaker(
     autoflush=False,
     autocommit=False,
 )
-
-Base.metadata.create_all(engine)
-
-print("Tables created successfully!")
