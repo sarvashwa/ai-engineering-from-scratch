@@ -21,7 +21,7 @@ def create_document(
     request: CreateDocumentRequest,
     service: DocumentService = Depends(get_document_service),
 ):
-    document = service.create_document(request.title)
+    document = service.create_document(request.title, request.user_id)
 
     return DocumentResponse(
         id=document.id,

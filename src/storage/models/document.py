@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.storage.models.base import Base
+if TYPE_CHECKING:
+    from src.storage.models.user import User
+
 
 class Document(Base):
     __tablename__ = "documents"
@@ -15,4 +20,8 @@ class Document(Base):
     user_id: Mapped[int | None] = mapped_column(
         ForeignKey("users.id"),
         nullable=True
+    )
+
+    user: Mapped["User"] = relationship(
+        back_populates="documents"
     )
