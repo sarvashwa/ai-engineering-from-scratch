@@ -75,3 +75,4 @@ def delete_document(
 ):
     service.delete_document(document_id)
     return {"message": f"Document with ID {document_id} has been deleted."}
+    

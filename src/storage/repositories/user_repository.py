@@ -14,19 +14,19 @@ class UserRepository:
             )
         
         self._session.add(user)
-        self._session.commit()
         self._session.refresh(user)
 
         return user
 
     def get_by_id(self, user_id: int) -> Optional[User]:
-        return self._session.get(User, user_id)
+        try:
+            return self._session.get(User, user_id)
+        except Exception:
+            raise
 
     def delete(self, user: User) -> None:
     
         try:
             self._session.delete(user)
-            self._session.commit()
         except Exception:
-            self._session.rollback()
             raise

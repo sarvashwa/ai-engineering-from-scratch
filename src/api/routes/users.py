@@ -33,7 +33,7 @@ def get_user(
     user_id: int,
     service: UserService = Depends(get_user_service)
 ):
-    user = service.get_user_by_id(user_id)
+    user = service.get_user(user_id)
     if user is None:
         return {"message": f"User with ID {user_id} not found."}
     return {"id": user.id, "name": user.name}
