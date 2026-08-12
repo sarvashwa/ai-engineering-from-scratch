@@ -23,6 +23,10 @@ class UserRepository:
         return self._session.get(User, user_id)
 
     def delete(self, user: User) -> None:
-        
-        self._session.delete(user)
-        self._session.commit()
+    
+        try:
+            self._session.delete(user)
+            self._session.commit()
+        except Exception:
+            self._session.rollback()
+            raise

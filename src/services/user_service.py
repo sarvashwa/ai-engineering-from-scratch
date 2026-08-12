@@ -1,6 +1,9 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from src.storage.repositories.user_repository import UserRepository
+from src.exceptions.user_has_document_exception import UserHasDocumentException
+from src.exceptions.user_not_found_exception import UserNotFoundException
 
 class UserService:
     def __init__(
@@ -13,7 +16,7 @@ class UserService:
         self._session = session
 
     def create_user(self, name: str):
-        
+
         user = self._user_repository.create_user(name)
 
         return user
@@ -22,6 +25,10 @@ class UserService:
         user = self._user_repository.get_by_id(user_id)
 
         if user is None:
-            raise Exception(f"User with ID {user_id} not found.")
+            raise UserNotFoundException(user_id)
 
-        self._user_repository.delete(user)
+        try:
+            self._user_repository.delete(user)
+        except IntegrityError:
+            self._session.rollback()
+            raise UserHasDocumentException(user_id)

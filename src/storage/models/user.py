@@ -14,5 +14,6 @@ class User(Base):
     name: Mapped[str] = mapped_column(nullable=False)
 
     documents: Mapped[list["Document"]] = relationship(
-        back_populates="user"
+        back_populates="user",
+        passive_deletes="all",
     )
