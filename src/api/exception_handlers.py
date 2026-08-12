@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 
 from src.exceptions.document_not_found_exceptions import DocumentNotFoundException
 from src.exceptions.user_not_found_exception import UserNotFoundException
+from src.exceptions.user_has_document_exception import UserHasDocumentException
 
 def register_exception_handlers(app: FastAPI):
     logger = logging.getLogger(__name__)
@@ -32,6 +33,7 @@ def register_exception_handlers(app: FastAPI):
         exception: DocumentNotFoundException,
     ):
         logger.warning(str(exception))
+
         return JSONResponse(
             status_code=404,
             content={
@@ -45,8 +47,23 @@ def register_exception_handlers(app: FastAPI):
         exception: UserNotFoundException,
     ):
         logger.warning(str(exception))
+
         return JSONResponse(
             status_code=404,
+            content={
+                "detail": str(exception)
+            }
+        )
+
+    @app.exception_handler(UserHasDocumentException)
+    def handle_user_has_document(
+        request: Request,
+        exception: UserHasDocumentException,
+    ):
+        logger.warning(str(exception))
+
+        return JSONResponse(
+            status_code=409,
             content={
                 "detail": str(exception)
             }
