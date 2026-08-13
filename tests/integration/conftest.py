@@ -5,6 +5,7 @@ from src.storage.vector_store import VectorStore
 from src.services.embedding_service import EmbeddingService
 from src.services.ingestion_service import IngestionService
 from src.services.document_ingestion_service import DocumentIngestionService
+from src.storage.database import SessionLocal
 
 @pytest.fixture
 def settings():
@@ -35,3 +36,12 @@ def document_ingestion_service(ingestion_service):
     return DocumentIngestionService(
         ingestion_service = ingestion_service
     )
+
+@pytest.fixture
+def session():
+    session = SessionLocal()
+
+    try:
+        yield session
+    finally:
+        session.close()
