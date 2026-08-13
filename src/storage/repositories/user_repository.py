@@ -11,10 +11,9 @@ class UserRepository:
     def create_user(self, name: str) -> User:
         user = User(
             name=name
-            )
+        )
         
         self._session.add(user)
-        self._session.refresh(user)
 
         return user
 
