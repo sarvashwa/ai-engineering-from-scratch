@@ -4,6 +4,7 @@ from src.api.dependencies import get_user_service
 
 from src.services.user_service import UserService
 from src.api.schemas.create_user_response import CreateUserResponse
+from src.api.schemas.create_user_request import CreateUserRequest
 
 router = APIRouter(
     prefix="/users",
@@ -17,10 +18,10 @@ router = APIRouter(
     response_model=CreateUserResponse
 )
 def create_user(
-    name: str,
+    request: CreateUserRequest,
     service: UserService = Depends(get_user_service)
 ):
-    user = service.create_user(name)
+    user = service.create_user(request.name)
     return {"id": user.id, "name": user.name}
 
 @router.get(

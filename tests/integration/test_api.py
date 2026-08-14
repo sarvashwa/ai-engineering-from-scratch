@@ -13,9 +13,6 @@ def test_create_user(session):
         params={"name": "john"}
     )
 
-    print(response.status_code)
-    print(response.json())
-
     data = response.json()
     user_id = data["id"]
 

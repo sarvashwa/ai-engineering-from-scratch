@@ -9,7 +9,7 @@ client = TestClient(app)
 def test_delete_user_failure(session):
     response = client.post(
         "/users",
-        params={"name": "joe"}
+        json={"name": "joe"}
     )
 
     user_id = response.json()["id"]
@@ -34,3 +34,30 @@ def test_delete_user_failure(session):
         f"User with ID {user_id} "
         "cannot be deleted because documents still belong to this user."
     )
+
+def test_create_user_failure():
+    response = client.post(
+        "/users",
+        json={}
+    )
+
+    data = response.json()
+
+    assert response.status_code == 422
+    assert data["detail"][0]["type"] == "missing"
+    assert data["detail"][0]["loc"] == ["body", "name"]
+
+def test_create_user_with_extra_field():
+    response = client.post(
+        "/users",
+        json={
+            "name": "joe",
+            "extra": "extra"
+        }
+    )
+
+    data = response.json()
+
+    assert response.status_code == 422
+    assert data["detail"][0]["type"] == "extra_forbidden"
+    assert data["detail"][0]["loc"] == ["body", "extra"]
