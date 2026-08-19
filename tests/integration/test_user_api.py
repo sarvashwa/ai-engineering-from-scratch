@@ -6,20 +6,20 @@ from src.storage.models.user import User
 
 client = TestClient(app)
 
-def test_delete_user_failure(session):
+def test_delete_user_failure(session, override_session):
     response = client.post(
         "/users",
-        json={"name": "joe"}
+        json={"name": "adam"}
     )
 
     user_id = response.json()["id"]
 
     response = client.post(
-    "/documents",
-    json={
-        "title": "My Document",
-        "user_id": user_id
-    }
+        "/documents",
+        json={
+            "title": "My Document",
+            "user_id": user_id
+        }
     )
 
     response = client.delete(

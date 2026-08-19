@@ -1,11 +1,16 @@
 import pytest
 
+from sqlalchemy.orm import Session
+
 from src.config.config import load_settings
 from src.storage.vector_store import VectorStore
 from src.services.embedding_service import EmbeddingService
 from src.services.ingestion_service import IngestionService
 from src.services.document_ingestion_service import DocumentIngestionService
 from src.storage.database import SessionLocal
+from src.main import app
+from src.api.dependencies import get_session
+from src.storage.database import engine
 
 @pytest.fixture
 def settings():
@@ -39,9 +44,27 @@ def document_ingestion_service(ingestion_service):
 
 @pytest.fixture
 def session():
-    session = SessionLocal()
+    connection = engine.connect()
+    transaction = connection.begin()
+
+    session = Session(bind=connection)
 
     try:
         yield session
+
     finally:
+        transaction.rollback()
         session.close()
+        connection.close()
+
+@pytest.fixture
+def override_session(session):
+
+    def override_get_session():
+        yield session
+    
+    try:
+        app.dependency_overrides[get_session] = override_get_session
+        yield
+    finally:
+        app.dependency_overrides.clear()
