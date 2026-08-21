@@ -23,6 +23,9 @@ class UserRepository:
         except Exception:
             raise
 
+    def get_all(self, skip: int, limit: int) -> list[User]:
+        return self._session.query(User).order_by(User.id).offset(skip).limit(limit).all()
+
     def delete(self, user: User) -> None:
     
         try:

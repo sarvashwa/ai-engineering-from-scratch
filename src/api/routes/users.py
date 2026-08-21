@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
 from src.api.dependencies import get_user_service
 
@@ -38,6 +38,20 @@ def get_user(
     if user is None:
         return {"message": f"User with ID {user_id} not found."}
     return {"id": user.id, "name": user.name}
+
+@router.get(
+    "",
+    summary="Get All Users",
+    description="Retrieve a list of all users.",
+    response_model=list[CreateUserResponse]
+)
+def get_all_users(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(10, ge=0, le=100),
+    service: UserService = Depends(get_user_service)
+):
+    users = service.get_all_users(skip, limit)
+    return [{"id": user.id, "name": user.name} for user in users]
 
 @router.put(
     "/{user_id}",

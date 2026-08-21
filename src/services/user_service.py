@@ -22,6 +22,9 @@ class UserService:
             raise UserNotFoundException(user_id)
 
         return user
+
+    def get_all_users(self, skip: int, limit: int):
+        return self._user_repository.get_all(skip, limit)
     
     def create_user(self, name: str):
 
