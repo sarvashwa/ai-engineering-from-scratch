@@ -17,3 +17,5 @@ class User(Base):
         back_populates="user",
         passive_deletes="all",
     )
+
+    password_hash: Mapped[str] = mapped_column(nullable=False)
