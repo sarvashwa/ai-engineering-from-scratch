@@ -26,9 +26,9 @@ class UserService:
     def get_all_users(self, skip: int, limit: int):
         return self._user_repository.get_all(skip, limit)
     
-    def create_user(self, name: str):
+    def create_user(self, name: str, password: str):
 
-        user = self._user_repository.create_user(name)
+        user = self._user_repository.create_user(name, password)
         try:
             self._session.commit()
         except Exception:

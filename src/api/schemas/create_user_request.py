@@ -9,3 +9,7 @@ class CreateUserRequest(BaseModel):
     name: str = Field(
         description="Name for the new user."
     )
+
+    password: str = Field(
+        description="Password for the new user."
+    )

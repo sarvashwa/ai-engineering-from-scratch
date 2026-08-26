@@ -5,6 +5,8 @@ from src.api.dependencies import get_user_service
 from src.services.user_service import UserService
 from src.api.schemas.create_user_response import CreateUserResponse
 from src.api.schemas.create_user_request import CreateUserRequest
+from src.security.password import hash_password
+
 
 router = APIRouter(
     prefix="/users",
@@ -21,8 +23,9 @@ def create_user(
     request: CreateUserRequest,
     service: UserService = Depends(get_user_service)
 ):
-    user = service.create_user(request.name)
-    return {"id": user.id, "name": user.name}
+    password = hash_password(request.password)
+    user = service.create_user(request.name, password)
+    return {"id": user.id, "name": user.name, }
 
 @router.get(
     "/{user_id}",

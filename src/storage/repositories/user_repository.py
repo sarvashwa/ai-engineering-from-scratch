@@ -8,9 +8,10 @@ class UserRepository:
     def __init__(self, session: Session):
         self._session = session
 
-    def create_user(self, name: str) -> User:
+    def create_user(self, name: str, hash_password: str) -> User:
         user = User(
-            name=name
+            name=name,
+            password_hash=hash_password
         )
         
         self._session.add(user)
