@@ -33,3 +33,9 @@ class UserRepository:
             self._session.delete(user)
         except Exception:
             raise
+
+    def get_by_name(self, name: str) -> Optional[User]:
+        try:
+            return self._session.query(User).filter(User.name == name).first()
+        except Exception:
+            raise

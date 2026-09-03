@@ -4,6 +4,8 @@ from sqlalchemy.exc import IntegrityError
 from src.storage.repositories.user_repository import UserRepository
 from src.exceptions.user_has_document_exception import UserHasDocumentException
 from src.exceptions.user_not_found_exception import UserNotFoundException
+from src.exceptions.user_password_incorrect_exception import UserPasswordIncorrectException
+from src.security.password import verify_password, hash_password
 
 class UserService:
     def __init__(
@@ -64,3 +66,19 @@ class UserService:
         except IntegrityError:
             self._session.rollback()
             raise UserHasDocumentException(user_id)
+
+    def get_user_by_name(self, name: str):
+        return self._user_repository.get_by_name(name)
+
+    def authenticate_user(self, name: str, password: str) -> bool:
+        user = self._user_repository.get_by_name(name)
+
+        if user is None: 
+            raise UserNotFoundException(name)
+
+        user_password = user.password_hash
+
+        if not verify_password(password, user_password):
+            raise UserPasswordIncorrectException()
+
+        return user

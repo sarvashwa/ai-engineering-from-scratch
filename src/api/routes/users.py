@@ -6,7 +6,10 @@ from src.services.user_service import UserService
 from src.api.schemas.create_user_response import CreateUserResponse
 from src.api.schemas.create_user_request import CreateUserRequest
 from src.security.password import hash_password
-
+from src.api.schemas.login_response import LoginResponse
+from src.api.schemas.login_request import LoginRequest
+from src.services.user_service import UserService
+from src.security.token import create_access_token
 
 router = APIRouter(
     prefix="/users",
@@ -83,3 +86,22 @@ def delete_user(
 ):
     service.delete_user(user_id)
     return {"message": f"User with ID {user_id} has been deleted."}
+
+@router.post(
+    "/login",
+    summary="Login",
+    description="Login a user",
+    response_model=LoginResponse
+)
+def login(
+    request: LoginRequest,
+    service: UserService = Depends(get_user_service)
+):
+    user = service.authenticate_user(request.name, request.password)
+
+    access_token = create_access_token(user.id)
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
