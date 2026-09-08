@@ -5,6 +5,7 @@ from src.api.routes.health import router as health_router
 from src.api.routes.ingestions import router as document_ingestion_router
 from src.api.routes.documents import router as document_router
 from src.api.routes.users import router as user_router
+from src.api.routes.tests import router as test_router
 
 router = APIRouter()
 
@@ -13,3 +14,4 @@ router.include_router(health_router)
 router.include_router(document_ingestion_router)
 router.include_router(document_router)
 router.include_router(user_router)
+router.include_router(test_router)

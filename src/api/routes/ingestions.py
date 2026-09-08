@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from src.services.document_ingestion_service import DocumentIngestionService
 from src.api.schemas.document_request import DocumentRequest
 from src.api.schemas.document_response import DocumentResponse
-from src.api.dependencies import get_document_ingestion_service
+from src.api.dependencies.services import get_document_ingestion_service
 
 router = APIRouter(
     prefix = "/ingestions/documents",

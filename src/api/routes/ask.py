@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, Depends, BackgroundTasks
 from fastapi.responses import StreamingResponse
 
 from src.api.background_log import background_log
-from src.api.dependencies import get_rag_service
+from src.api.dependencies.services import get_rag_service
 from src.services.rag_service import RAGService
 from src.api.schemas.ask_request import AskRequest
 from src.api.schemas.ask_response import AskResponse

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 
-from src.api.dependencies import get_user_service
+from src.api.dependencies.services import get_user_service
 
 from src.services.user_service import UserService
 from src.api.schemas.create_user_response import CreateUserResponse

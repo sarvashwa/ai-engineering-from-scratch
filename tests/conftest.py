@@ -9,7 +9,7 @@ from src.services.ingestion_service import IngestionService
 from src.services.document_ingestion_service import DocumentIngestionService
 from src.storage.database import SessionLocal
 from src.main import app
-from src.api.dependencies import get_session
+from src.api.dependencies.services import get_session
 from src.storage.database import engine
 
 @pytest.fixture

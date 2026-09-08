@@ -2,8 +2,7 @@ from fastapi import APIRouter, status, Depends
 
 from src.api.schemas.health_response import HealthResponse
 from src.application.application import Application
-from src.api.dependencies import get_application
-
+from src.api.dependencies.application import get_application
 router = APIRouter(
     prefix="/health",
     tags=["Health"]

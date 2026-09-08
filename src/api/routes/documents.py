@@ -1,6 +1,6 @@
 from fastapi import status, APIRouter, Depends
 
-from src.api.dependencies import get_document_service
+from src.api.dependencies.services import get_document_service
 from src.api.schemas.create_document_request import CreateDocumentRequest
 from src.api.schemas.update_document_request import UpdateDocumentRequest
 from src.api.schemas.document_response import DocumentResponse
