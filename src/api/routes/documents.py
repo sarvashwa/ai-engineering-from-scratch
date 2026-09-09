@@ -5,6 +5,7 @@ from src.api.schemas.create_document_request import CreateDocumentRequest
 from src.api.schemas.update_document_request import UpdateDocumentRequest
 from src.api.schemas.document_response import DocumentResponse
 from src.services.document_service import DocumentService
+from src.api.schemas.error_response import ErrorResponse
 
 from src.storage.models import User
 from src.api.dependencies.auth import get_current_user
@@ -36,7 +37,13 @@ def create_document(
     "/{document_id}",
     response_model=DocumentResponse,
     summary="Get Document",
-    description="Retrieve a document by its ID."
+    description="Retrieve a document by its ID.",
+    responses={
+        403: {
+            "model": ErrorResponse,
+            "description": "Access denied to the document.",
+        }
+    }
 )
 def get_document(
     document_id: int,

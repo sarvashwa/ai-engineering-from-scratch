@@ -95,6 +95,9 @@ def register_exception_handlers(app: FastAPI):
         return JSONResponse(
             status_code=403,
             content={
-                "detail": str(exception)
+                "error": {
+                    "code": "DOCUMENT_ACCESS_DENIED",
+                    "message": str(exception),
+                }
             }
         )
