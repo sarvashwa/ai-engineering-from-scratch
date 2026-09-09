@@ -7,6 +7,7 @@ from src.exceptions.document_not_found_exceptions import DocumentNotFoundExcepti
 from src.exceptions.user_not_found_exception import UserNotFoundException
 from src.exceptions.user_has_document_exception import UserHasDocumentException
 from src.exceptions.user_password_incorrect_exception import UserPasswordIncorrectException
+from src.exceptions.document_access_denied_exception import DocumentAccessDeniedException
 
 def register_exception_handlers(app: FastAPI):
     logger = logging.getLogger(__name__)
@@ -79,6 +80,20 @@ def register_exception_handlers(app: FastAPI):
 
         return JSONResponse(
             status_code=401,
+            content={
+                "detail": str(exception)
+            }
+        )
+
+    @app.exception_handler(DocumentAccessDeniedException)
+    def handle_document_access_denied(
+        request: Request,
+        exception: DocumentAccessDeniedException,
+    ):
+        logger.warning(str(exception))
+
+        return JSONResponse(
+            status_code=403,
             content={
                 "detail": str(exception)
             }

@@ -6,6 +6,9 @@ from src.api.schemas.update_document_request import UpdateDocumentRequest
 from src.api.schemas.document_response import DocumentResponse
 from src.services.document_service import DocumentService
 
+from src.storage.models import User
+from src.api.dependencies.auth import get_current_user
+
 router = APIRouter(
     prefix="/documents",
     tags=["Documents"]
@@ -19,9 +22,10 @@ router = APIRouter(
 )
 def create_document(
     request: CreateDocumentRequest,
+    current_user: User = Depends(get_current_user),
     service: DocumentService = Depends(get_document_service),
 ):
-    document = service.create_document(request.title, request.user_id)
+    document = service.create_document(request.title, current_user.id)
 
     return DocumentResponse(
         id=document.id,
@@ -36,9 +40,11 @@ def create_document(
 )
 def get_document(
     document_id: int,
+    current_user: User = Depends(get_current_user),
     service: DocumentService = Depends(get_document_service),
 ):
-    document = service.get_document(document_id)
+    
+    document = service.get_document(document_id, current_user)
 
     return DocumentResponse(
         id=document.id,
