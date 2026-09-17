@@ -1,4 +1,4 @@
-from fastapi import status, APIRouter, Depends
+from fastapi import status, APIRouter, Depends, Header
 
 from src.api.dependencies.services import get_document_service
 from src.api.schemas.create_document_request import CreateDocumentRequest
@@ -23,6 +23,7 @@ router = APIRouter(
 )
 def create_document(
     request: CreateDocumentRequest,
+    idempotency_key: str = Header(..., alias="Idempotency-Key"),
     current_user: User = Depends(get_current_user),
     service: DocumentService = Depends(get_document_service),
 ):

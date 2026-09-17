@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from src.storage.repositories.document_repository import DocumentRepository
 from src.storage.repositories.user_repository import UserRepository
+from src.storage.repositories.idempotency_repository import IdempotencyRepository
 
 from src.api.dependencies.database import get_session
 
@@ -18,3 +19,7 @@ def get_user_repository(
     ) -> UserRepository:
     return UserRepository(session)
 
+def get_idempotency_repository(
+        session: Session = Depends(get_session)
+    ) -> IdempotencyRepository:
+    return IdempotencyRepository(session)

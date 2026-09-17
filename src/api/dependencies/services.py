@@ -8,16 +8,19 @@ from src.api.dependencies.application import get_application
 from src.api.dependencies.database import get_session
 from src.api.dependencies.repositories import (
     get_document_repository,
-    get_user_repository
+    get_user_repository,
+    get_idempotency_repository
 )
 
 from src.services.document_service import DocumentService
 from src.services.user_service import UserService
 from src.services.rag_service import RAGService
 from src.services.document_ingestion_service import DocumentIngestionService
+from src.services.idempotency_service import IdempotencyService
 
 from src.storage.repositories.document_repository import DocumentRepository
 from src.storage.repositories.user_repository import UserRepository
+from src.storage.repositories.idempotency_repository import IdempotencyRepository
 
 def get_rag_service(
         application: Application = Depends(get_application)
@@ -33,10 +36,16 @@ def get_document_service(
         document_repository: DocumentRepository = Depends(get_document_repository),
         session: Session = Depends(get_session)
     ) -> DocumentService:
-    return DocumentService(document_repository, session)
+    return DocumentService (document_repository, session)
 
 def get_user_service(
         user_repository: UserRepository = Depends(get_user_repository),
         session: Session = Depends(get_session)
     ) -> UserService:
     return UserService(user_repository, session)
+
+def get_idempotency_key_service(
+        idempotency_repository: IdempotencyRepository = Depends(get_idempotency_repository),
+        session: Session = Depends(get_session)
+) -> IdempotencyService:
+    return IdempotencyService

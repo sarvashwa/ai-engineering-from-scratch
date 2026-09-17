@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from src.storage.models.idempotency_key import IdempotencyKey
 
-class IdempotencyKeyRepository:
+class IdempotencyRepository:
     def __init__(self, session: Session):
         self._session = session
 
