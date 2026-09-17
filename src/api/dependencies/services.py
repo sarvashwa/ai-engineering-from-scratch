@@ -48,4 +48,4 @@ def get_idempotency_key_service(
         idempotency_repository: IdempotencyRepository = Depends(get_idempotency_repository),
         session: Session = Depends(get_session)
 ) -> IdempotencyService:
-    return IdempotencyService
+    return IdempotencyService(idempotency_repository)

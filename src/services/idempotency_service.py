@@ -8,6 +8,7 @@ class IdempotencyService:
             self,
             idempotency_repository: IdempotencyRepository,
             ):
+        
         self._idempotency_repository = idempotency_repository
 
     def get_idempotency_key(self, key: str, user_id: int) -> IdempotencyKey:
