@@ -17,6 +17,7 @@ from src.services.user_service import UserService
 from src.services.rag_service import RAGService
 from src.services.document_ingestion_service import DocumentIngestionService
 from src.services.idempotency_service import IdempotencyService
+from src.services.document_creation_service import DocumentCreationService
 
 from src.storage.repositories.document_repository import DocumentRepository
 from src.storage.repositories.user_repository import UserRepository
@@ -49,3 +50,10 @@ def get_idempotency_key_service(
         session: Session = Depends(get_session)
 ) -> IdempotencyService:
     return IdempotencyService(idempotency_repository)
+
+def get_document_creation_service(
+    document_service: DocumentService = Depends(get_document_service),
+    idempotency_service: IdempotencyService = Depends(get_idempotency_key_service),
+    session: Session = Depends(get_session),
+) -> DocumentCreationService:
+    return DocumentCreationService(document_service, idempotency_service, session)

@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import Request, FastAPI
+from fastapi import Request, FastAPI, status
 from fastapi.responses import JSONResponse
 
 from src.exceptions.document_not_found_exceptions import DocumentNotFoundException
@@ -8,6 +8,8 @@ from src.exceptions.user_not_found_exception import UserNotFoundException
 from src.exceptions.user_has_document_exception import UserHasDocumentException
 from src.exceptions.user_password_incorrect_exception import UserPasswordIncorrectException
 from src.exceptions.document_access_denied_exception import DocumentAccessDeniedException
+from src.exceptions.idempotency_key_reuse_exception import IdempotencyKeyReuseException
+from src.exceptions.idempotency_request_processing_exception import IdempotencyRequestProcessingException
 
 def register_exception_handlers(app: FastAPI):
     logger = logging.getLogger(__name__)
@@ -101,3 +103,38 @@ def register_exception_handlers(app: FastAPI):
                 }
             }
         )
+
+    @app.exception_handler(IdempotencyKeyReuseException)
+    def handle_idempotency_key_reuse(
+        request: Request,
+        exception: IdempotencyKeyReuseException,
+    ):
+        logger.warning(str(exception))
+
+        return JSONResponse(
+            status_code=status.HTTP_409_CONFLICT,
+            content={
+                "error": {
+                    "code": "IDEMPOTENCY_KEY_REUSE",
+                    "message": str(exception),
+                }
+            },
+        )
+
+    @app.exception_handler(IdempotencyRequestProcessingException)
+    def handle_idempotency_request_processing(
+        request: Request,
+        exception: IdempotencyRequestProcessingException,
+    ):
+        logger.warning(str(exception))
+
+        return JSONResponse(
+            status_code=status.HTTP_409_CONFLICT,
+            content={
+                "error": {
+                    "code": "IDEMPOTENCY_REQUEST_PROCESSING",
+                    "message": str(exception),
+                }
+            },
+        )
+   

@@ -1,11 +1,18 @@
-from fastapi import status, APIRouter, Depends, Header
+from fastapi import status, APIRouter, Depends, Header, HTTPException
 
-from src.api.dependencies.services import get_document_service
+from src.api.dependencies.services import (
+    get_document_service,
+    get_document_creation_service,
+    get_idempotency_key_service
+)
 from src.api.schemas.create_document_request import CreateDocumentRequest
 from src.api.schemas.update_document_request import UpdateDocumentRequest
 from src.api.schemas.document_response import DocumentResponse
-from src.services.document_service import DocumentService
 from src.api.schemas.error_response import ErrorResponse
+
+from src.services.document_service import DocumentService
+from src.services.idempotency_service import IdempotencyService
+from src.services.document_creation_service import DocumentCreationService
 
 from src.storage.models import User
 from src.api.dependencies.auth import get_current_user
@@ -19,15 +26,43 @@ router = APIRouter(
     "",
     response_model=DocumentResponse,
     summary="Create Document",
-    description="Create a new document."
+    description="Create a new document.",
+    responses={
+        409: {
+            "model": ErrorResponse,
+            "description": "Idempotency key was already used for a different request.",
+        }
+    }
 )
 def create_document(
     request: CreateDocumentRequest,
     idempotency_key: str = Header(..., alias="Idempotency-Key"),
     current_user: User = Depends(get_current_user),
-    service: DocumentService = Depends(get_document_service),
+    document_creation_service: DocumentCreationService = Depends(get_document_creation_service),
+    idempotency_service: IdempotencyService = Depends(get_idempotency_key_service)
 ):
-    document = service.create_document(request.title, current_user.id)
+    existing = idempotency_service.get_idempotency_key(idempotency_key, current_user.id)
+    request_hash = idempotency_service.generate_request_hash(request.model_dump())
+
+    if existing is None:
+        idempotency_service.create(
+            idempotency_key,
+            current_user.id,
+            request_hash,
+        )
+    else:
+        if existing.request_hash != request_hash:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail={"message": "Idempotency key was already used for a different request."},
+            )
+
+    document = document_creation_service.create_document(
+        request.title,
+        current_user.id,
+        idempotency_key,
+        request_hash
+    )
 
     return DocumentResponse(
         id=document.id,
@@ -57,7 +92,8 @@ def get_document(
     return DocumentResponse(
         id=document.id,
         title=document.title,
-)
+    )
+
 
 @router.put(
     "/{document_id}",
